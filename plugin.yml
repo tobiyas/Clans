@@ -1,0 +1,15 @@
+name: Clans
+main: de.tobiyas.clans.Clans
+version: 0.1
+website: http://
+author: tobiyas
+
+description: >
+             Clan Plugin for Bukkit
+commands:
+  clan:
+    description:
+    aliases: []
+    usage:  |
+            /clan
+
