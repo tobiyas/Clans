@@ -1,6 +1,7 @@
 package de.tobiyas.clans.commands.command;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import org.bukkit.entity.Player;
 
@@ -9,7 +10,7 @@ import de.tobiyas.clans.commands.CommandDelegator;
 import de.tobiyas.clans.commands.CommandInterface;
 import de.tobiyas.clans.commands.CommandParameter;
 
-public class CommandMember implements CommandInterface {
+public class CommandMember implements CommandInterface, Observer {
 
 	private Clans plugin;
 	private final String identString = "member";

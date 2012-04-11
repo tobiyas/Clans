@@ -30,10 +30,15 @@ package de.tobiyas.clans;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 import org.bukkit.plugin.PluginDescriptionFile;
+
+import de.tobiyas.clans.commands.CommandDelegator;
 import de.tobiyas.clans.configuration.Config;
+import de.tobiyas.clans.datacontainer.ClanController;
 import de.tobiyas.clans.listeners.Listener_Block;
 import de.tobiyas.clans.listeners.Listener_Entity;
 import de.tobiyas.clans.listeners.Listener_Player;
+import de.tobiyas.clans.money.MoneyManager;
+import de.tobiyas.clans.permissions.PermissionManager;
 
 
 public class Clans extends JavaPlugin{
@@ -42,6 +47,10 @@ public class Clans extends JavaPlugin{
 
 	private String prefix;
 	private Config config;
+	private PermissionManager permissionManager;
+	private MoneyManager moneyManager;
+	
+	private ClanController clanController;
 
 	private static Clans plugin;
 	
@@ -52,19 +61,23 @@ public class Clans extends JavaPlugin{
 		description = getDescription();
 		prefix = "["+description.getName()+"] ";
 
-		log("loading "+description.getFullName());
-
+		permissionManager = new PermissionManager();
+		moneyManager = new MoneyManager();
+		
 		setupConfiguration();
+		clanController = new ClanController();
+		
 		registerEvents();
-
 		registerCommands();
+		
+		log(description.getFullName() + " fully loaded using: " + permissionManager.getPermissionsName() + " and: " + moneyManager.getActiveEcoName());
 	}
 	
 	@Override
 	public void onDisable(){
 		log("disabled "+description.getFullName());
-
 	}
+	
 	public void log(String message){
 		log.info(prefix+message);
 	}
@@ -77,7 +90,7 @@ public class Clans extends JavaPlugin{
 	}
 	
 	private void registerCommands(){
-		
+		new CommandDelegator();
 	}
 
 
@@ -92,6 +105,10 @@ public class Clans extends JavaPlugin{
 
 	public static Clans getPlugin() {
 		return plugin;
+	}
+	
+	public ClanController getClanController(){
+		return clanController;
 	}
 
 }

@@ -26,14 +26,11 @@ public class Listener_Entity implements Listener {
 	}
 
 	@EventHandler
-	public void onProjectileHit(ProjectileHitEvent event){
-		// TODO handle that event
-	}
-
-	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event){
 		// TODO handle that event
 	}
 
-
+	public void onEnderDragonDeath(){
+		
+	}
 }
