@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import de.tobiyas.clans.commands.CommandDelegator;
+import de.tobiyas.clans.commands.command.singlecommand.CommandAcceptInvite;
+import de.tobiyas.clans.commands.command.singlecommand.CommandClanCreate;
 import de.tobiyas.clans.configuration.Config;
 import de.tobiyas.clans.datacontainer.ClanController;
 import de.tobiyas.clans.listeners.Listener_Block;
@@ -47,6 +49,7 @@ public class Clans extends JavaPlugin{
 
 	private String prefix;
 	private Config config;
+	
 	private PermissionManager permissionManager;
 	private MoneyManager moneyManager;
 	
@@ -91,11 +94,17 @@ public class Clans extends JavaPlugin{
 	
 	private void registerCommands(){
 		new CommandDelegator();
+		new CommandClanCreate();
+		new CommandAcceptInvite();
 	}
 
 
 	private void setupConfiguration(){
 		config = new Config(this);
+	}
+	
+	public PermissionManager getPermissionManager(){
+		return permissionManager;
 	}
 
 	

@@ -54,12 +54,16 @@ public class VaultMoney implements MoneyPlugin {
 	}
 	
 	private boolean initVault(){
-        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            vaultEconomy = economyProvider.getProvider();
-        }
-
-        return (vaultEconomy != null);
+		try{
+	        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+	        if (economyProvider != null) {
+	            vaultEconomy = economyProvider.getProvider();
+	        }
+	
+	        return (vaultEconomy != null);
+		}catch(NoClassDefFoundError e){
+			return false;
+		}
   }
 
 	@Override

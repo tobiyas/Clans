@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.LinkedList;
 
+import org.bukkit.entity.Player;
+
 import de.tobiyas.clans.Clans;
 
 public class ClanController {
@@ -23,7 +25,7 @@ public class ClanController {
 		if(!file.exists())
 			file.mkdir();
 		
-		File clanDir = new File(file + "clans");
+		File clanDir = new File(file + File.separator + "clans");
 		
 		if(!clanDir.exists()){
 			clanDir.mkdir();
@@ -43,6 +45,21 @@ public class ClanController {
 		for(File clanName : clanFiles){
 			clans.add(new Clan(clanName.getName()));
 		}
+	}
+	
+	public boolean createNewClan(Player player, String clanName){
+		if(getClan(clanName) != null) return false;
+		Clan newClan = new Clan(player, clanName);
+		
+		clans.add(newClan);
+		return true;
+	}
+	
+	public Clan getClan(Player player){
+		for(Clan clan : clans){
+			if(clan.hasMember(player)) return clan;
+		}
+		return null;
 	}
 	
 	public Clan getClan(String clanName){

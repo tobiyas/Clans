@@ -79,7 +79,7 @@ public class EssentialsEcoMoney implements MoneyPlugin {
 			Essentials tempPlugin = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
 			if(tempPlugin == null) return false;
 			if(!tempPlugin.isEnabled()) return false;
-		}catch(Exception e){
+		}catch(NoClassDefFoundError e){
 			return false;
 		}
 		return true;

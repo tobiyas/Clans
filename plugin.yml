@@ -12,4 +12,18 @@ commands:
     aliases: []
     usage:  |
             /clan
-
+  gchat:
+    description: guild chat
+    aliases: [g]
+    usage:  |
+            /gchat <message>
+  clancreate:
+    description: creates a new clan
+    aliases: []
+    usage:  |
+            /clancreate <clanname>
+  acceptinvite:
+    description: accepts an Invite to a clan.
+    aliases: []
+    usage:  |
+            /acceptinvite

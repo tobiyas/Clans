@@ -37,11 +37,14 @@ public class MoneyManager {
 			return true;
 		}
 		
-		tempPlugin = new EssentialsEcoMoney();
-		if(tempPlugin.isActive()){
-			moneyPlugin = tempPlugin;
-			return true;
-		}
+		try{
+			tempPlugin = new EssentialsEcoMoney();
+			if(tempPlugin.isActive()){
+				moneyPlugin = tempPlugin;
+				return true;
+			}
+		}catch(NoClassDefFoundError e)
+		{}
 		
 		return false;
 	}

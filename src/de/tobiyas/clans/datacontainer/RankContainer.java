@@ -1,5 +1,6 @@
 package de.tobiyas.clans.datacontainer;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,10 +19,35 @@ public class RankContainer {
 		
 		rankParser = new YamlConfigExtended(clan.getClanPath() + "ranks.yml");
 		rankParser.load();
-		
-		loadRanks();
 	}
 	
+	public void initNewContainer(){
+		ArrayList<String> memberList = new ArrayList<String>();
+		memberList.add("chat");
+		memberList.add("moneygive");
+		memberList.add("info");
+		
+		Rank member = new Rank(rankParser, "Member");
+		member.createNew(memberList);
+		
+		ArrayList<String> leaderList = new ArrayList<String>();
+		leaderList.add("chat");
+		leaderList.add("moneygive");
+		leaderList.add("info");
+		leaderList.add("invite");
+		leaderList.add("kick");
+		leaderList.add("moneytake");
+		leaderList.add("editrank");
+		Rank leader = new Rank(rankParser, "Leader");
+		leader.createNew(leaderList);
+		
+		ranks.add(leader);
+		ranks.add(member);
+	}
+	
+	public void loadAll(){
+		loadRanks();
+	}	
 	
 	private void loadRanks(){
 		Set<String> rankStrings = rankParser.getYAMLChildren("rank");

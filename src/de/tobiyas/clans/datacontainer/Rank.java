@@ -14,6 +14,13 @@ public class Rank {
 		this.parser = config;
 	}
 	
+	public void createNew(List<String> permissions){
+		parser.createSection("rank." + rankName);
+		setPermissions(permissions);
+		setRankTag("[" + rankName + "]");
+		setShowRankTag(false);
+	}
+	
 	private List<String> getPermissions(){
 		return parser.getStringList("rank." + rankName + ".permissions");
 	}
@@ -40,6 +47,22 @@ public class Rank {
 	private void setShowRankTag(boolean set){
 		parser.set("rank." + rankName + ".showtag", set);
 		parser.save();
+	}
+	
+	public List<String> getPermissionList(){
+		return parser.getStringList("rank." + rankName + ".permissions");
+	}
+	
+	public String getPermissionString(){
+		List<String> perms = getPermissionList();
+		String perm = "";
+		for(String permission : perms){
+			perm += permission + ", ";
+		}
+		if(perm == "") return "";
+		
+		perm = perm.substring(0, perm.length() - 2);
+		return perm;
 	}
 	
 	public boolean addPermission(String perm){

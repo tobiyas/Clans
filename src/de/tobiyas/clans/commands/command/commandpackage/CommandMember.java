@@ -1,4 +1,4 @@
-package de.tobiyas.clans.commands.command;
+package de.tobiyas.clans.commands.command.commandpackage;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 
 import de.tobiyas.clans.Clans;
 import de.tobiyas.clans.commands.CommandDelegator;
-import de.tobiyas.clans.commands.CommandInterface;
-import de.tobiyas.clans.commands.CommandParameter;
+import de.tobiyas.clans.commands.command.CommandInterface;
+import de.tobiyas.clans.commands.command.CommandParameter;
 
 public class CommandMember implements CommandInterface, Observer {
 
@@ -29,12 +29,14 @@ public class CommandMember implements CommandInterface, Observer {
 	@Override
 	public void update(Observable commandDelegator, Object args) {
 		CommandParameter parameter = (CommandParameter) args;
-		if(!parameter.getCategory().equals(identString)) return;
-		
+		CommandDelegator delegator = (CommandDelegator) commandDelegator;
+			
 		Player player = parameter.getPlayer();
 		String[] arg = parameter.getArgs();
-		
-		run(player, arg);
+		delegator.addUnknown(player, 10);
+
+		if(!parameter.getCategory().equals(identString)) return;	
+		if(run(player, arg)) delegator.addUnknown(player, 1);
 	}
 
 }

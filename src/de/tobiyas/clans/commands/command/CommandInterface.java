@@ -1,4 +1,4 @@
-package de.tobiyas.clans.commands;
+package de.tobiyas.clans.commands.command;
 
 import org.bukkit.entity.Player;
 
