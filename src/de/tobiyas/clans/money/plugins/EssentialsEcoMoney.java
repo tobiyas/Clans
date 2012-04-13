@@ -90,4 +90,34 @@ public class EssentialsEcoMoney implements MoneyPlugin {
 		return "EssentialsECO";
 	}
 
+	@Override
+	public void createBankAccount(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeBankAccount(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addToBankAccount(String name, double amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean withdrawFromBankAccount(String name, double amount) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double getBankBalance(String bankName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

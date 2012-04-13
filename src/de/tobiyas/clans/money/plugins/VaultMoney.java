@@ -71,4 +71,31 @@ public class VaultMoney implements MoneyPlugin {
 		return "Vault";
 	}
 
+	@Override
+	public void createBankAccount(String name) {
+		vaultEconomy.createBank(name, null);
+	}
+
+	@Override
+	public void removeBankAccount(String name) {
+		vaultEconomy.deleteBank(name);
+	}
+
+	@Override
+	public void addToBankAccount(String name, double amount) {
+		vaultEconomy.bankDeposit(name, amount);
+	}
+
+	@Override
+	public boolean withdrawFromBankAccount(String name, double amount) {
+		if(getBankBalance(name) < amount) return false;
+		vaultEconomy.bankWithdraw(name, amount);
+		return true;
+	}
+
+	@Override
+	public double getBankBalance(String bankName) {
+		return vaultEconomy.bankBalance(bankName).balance;
+	}
+
 }

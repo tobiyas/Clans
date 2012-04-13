@@ -34,8 +34,9 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import de.tobiyas.clans.commands.CommandDelegator;
 import de.tobiyas.clans.commands.command.singlecommand.CommandAcceptInvite;
 import de.tobiyas.clans.commands.command.singlecommand.CommandClanCreate;
+import de.tobiyas.clans.commands.command.singlecommand.CommandDeclineInvite;
 import de.tobiyas.clans.configuration.Config;
-import de.tobiyas.clans.datacontainer.ClanController;
+import de.tobiyas.clans.datacontainer.clan.ClanController;
 import de.tobiyas.clans.listeners.Listener_Block;
 import de.tobiyas.clans.listeners.Listener_Entity;
 import de.tobiyas.clans.listeners.Listener_Player;
@@ -96,6 +97,7 @@ public class Clans extends JavaPlugin{
 		new CommandDelegator();
 		new CommandClanCreate();
 		new CommandAcceptInvite();
+		new CommandDeclineInvite();
 	}
 
 
@@ -118,6 +120,10 @@ public class Clans extends JavaPlugin{
 	
 	public ClanController getClanController(){
 		return clanController;
+	}
+	
+	public MoneyManager getMoneyManager(){
+		return moneyManager;
 	}
 
 }

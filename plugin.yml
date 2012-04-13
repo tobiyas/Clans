@@ -27,3 +27,8 @@ commands:
     aliases: []
     usage:  |
             /acceptinvite
+  declineinvite:
+    description: declines an Invite
+    aliases: []
+    usage:  |
+            /declineinvite

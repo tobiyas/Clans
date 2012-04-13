@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.tobiyas.clans.Clans;
-import de.tobiyas.clans.datacontainer.Clan;
+import de.tobiyas.clans.datacontainer.clan.Clan;
 import de.tobiyas.clans.permissions.PermissionNode;
 
 public class CommandClanCreate implements CommandExecutor{

@@ -13,8 +13,8 @@ import de.tobiyas.clans.Clans;
 import de.tobiyas.clans.commands.CommandDelegator;
 import de.tobiyas.clans.commands.command.CommandInterface;
 import de.tobiyas.clans.commands.command.CommandParameter;
-import de.tobiyas.clans.datacontainer.Clan;
-import de.tobiyas.clans.datacontainer.Rank;
+import de.tobiyas.clans.datacontainer.clan.Clan;
+import de.tobiyas.clans.datacontainer.rank.Rank;
 
 public class CommandInfo implements CommandInterface, Observer {
 
@@ -30,6 +30,17 @@ public class CommandInfo implements CommandInterface, Observer {
 	public boolean run(Player player, String[] args) {
 		if(args.length != 1) return false;
 		
+		Clan clan = plugin.getClanController().getClan(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You are not in a clan.");
+			return true;
+		}
+		
+		if(!clan.hasPermission(player, "info")){
+			player.sendMessage(ChatColor.RED + "Your rank does not have the Permission to use this command.");
+			return true;
+		}
+		
 		String command = args[0];
 		if(command.equalsIgnoreCase("money")) return moneyCommand(player);
 		if(command.equalsIgnoreCase("online")) return onlineCommand(player);
@@ -41,7 +52,17 @@ public class CommandInfo implements CommandInterface, Observer {
 	}
 	
 	private boolean moneyCommand(Player player){
-		player.sendMessage(ChatColor.RED + "Money: Not yet implemented!");
+		Clan clan = plugin.getClanController().getClan(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You are not in any clan.");
+			return true;
+		}
+		
+		double bankBalance = plugin.getMoneyManager().getBankBalance(clan.getName());
+		
+		player.sendMessage(ChatColor.YELLOW + "The clan: " + ChatColor.LIGHT_PURPLE + clan.getName() + 
+				ChatColor.YELLOW + " has currently " + ChatColor.GREEN + bankBalance +
+				ChatColor.YELLOW + " money.");
 		return true;
 	}
 	

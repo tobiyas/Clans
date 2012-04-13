@@ -1,15 +1,16 @@
-package de.tobiyas.clans.datacontainer;
+package de.tobiyas.clans.datacontainer.clan;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
 
 import de.tobiyas.clans.Clans;
 import de.tobiyas.clans.configuration.YamlConfigExtended;
+import de.tobiyas.clans.datacontainer.rank.Rank;
+import de.tobiyas.clans.datacontainer.rank.RankContainer;
 
 public class Clan {
 
@@ -42,9 +43,13 @@ public class Clan {
 		clanParser.load();
 		
 		clanParser.createSection("members");
+		clanParser.createSection("clanConfig");
 		
 		clanParser.set("members." + player.getName(), "Leader");
+		clanParser.set("clanConfig.defaultRank", "Member");
 		clanParser.save();
+		
+		plugin.getMoneyManager().createBank(clanName);
 	}
 	
 	private void createNewRankContainer(String clanName){
@@ -59,6 +64,13 @@ public class Clan {
 	public boolean hasMember(Player player){
 		if(player == null) return false;
 		String member = clanParser.getString("members." + player.getName());
+		if(member == null || member == "")
+			return false;
+		return true;
+	}
+	
+	public boolean hasMember(String name){
+		String member = clanParser.getString("members." + name);
 		if(member == null || member == "")
 			return false;
 		return true;
@@ -89,8 +101,11 @@ public class Clan {
 	}
 	
 	public Rank getRankOfPlayer(Player player){
-		String playerName = player.getName();
-		if(!hasMember(player)) return null;
+		return getRankOfPlayer(player.getName());
+	}
+	
+	public Rank getRankOfPlayer(String playerName){
+		if(!hasMember(playerName)) return null;
 		String rankName = clanParser.getString("members." + playerName);
 		return rankContainer.getRank(rankName);
 	}
@@ -111,5 +126,47 @@ public class Clan {
 	
 	public String getClanPath(){
 		return clanPath;
+	}
+
+	public String getDefaultRank() {
+		return clanParser.getString("clanConfig.defaultRank");
+	}
+
+	public void addMember(Player player, String rankName) {
+		String playerName = player.getName();
+		Rank rank = getRankByName(rankName);
+		if(rank == null){
+			plugin.log("Something gone wrong in adding member: " + playerName + " to rank: " + rankName);
+			return;
+		}
+		clanParser.set("members." + playerName, rank.getRankName());
+		clanParser.save();
+	}
+	
+	public void removeMember(Player player){
+		clanParser.set("members." + player.getName(), null);
+		clanParser.save();
+	}
+	
+	public void removeMember(String playerName){
+		clanParser.set("members." + playerName, null);
+		clanParser.save();
+	}
+	
+	public void changeRank(String playerName, String newRank){
+		if(!hasMember(playerName)) return;
+		clanParser.set("members." +playerName, newRank);
+		clanParser.save();
+	}
+	
+	public boolean hasPermission(Player player, String permission){
+		return hasPermission(player.getName(), permission);
+	}
+	
+	public boolean hasPermission(String playerName, String permission){
+		Rank rank = getRankOfPlayer(playerName);
+		if(rank == null) return false;
+		
+		return rank.hasPermission(permission);
 	}
 }

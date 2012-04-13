@@ -1,4 +1,4 @@
-package de.tobiyas.clans.datacontainer;
+package de.tobiyas.clans.datacontainer.rank;
 
 import java.util.List;
 

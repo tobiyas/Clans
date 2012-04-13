@@ -1,4 +1,4 @@
-package de.tobiyas.clans.datacontainer;
+package de.tobiyas.clans.datacontainer.clan;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -7,14 +7,17 @@ import java.util.LinkedList;
 import org.bukkit.entity.Player;
 
 import de.tobiyas.clans.Clans;
+import de.tobiyas.clans.datacontainer.InviteContainer;
 
 public class ClanController {
 
 	private LinkedList<Clan> clans;
 	private Clans plugin;
+	private InviteContainer invContainer;
 	
 	public ClanController(){
 		plugin = Clans.getPlugin();
+		invContainer = new InviteContainer();
 		createClans();
 	}
 	
@@ -67,5 +70,9 @@ public class ClanController {
 			if(clan.getName().equalsIgnoreCase(clanName)) return clan;
 		}
 		return null;
+	}
+	
+	public InviteContainer getInvContainer(){
+		return invContainer;
 	}
 }

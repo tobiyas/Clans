@@ -1,10 +1,11 @@
-package de.tobiyas.clans.datacontainer;
+package de.tobiyas.clans.datacontainer.rank;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import de.tobiyas.clans.configuration.YamlConfigExtended;
+import de.tobiyas.clans.datacontainer.clan.Clan;
 
 public class RankContainer {
 

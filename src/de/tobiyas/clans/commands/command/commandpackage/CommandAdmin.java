@@ -3,12 +3,17 @@ package de.tobiyas.clans.commands.command.commandpackage;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.tobiyas.clans.Clans;
 import de.tobiyas.clans.commands.CommandDelegator;
 import de.tobiyas.clans.commands.command.CommandInterface;
 import de.tobiyas.clans.commands.command.CommandParameter;
+import de.tobiyas.clans.datacontainer.InviteContainer;
+import de.tobiyas.clans.datacontainer.clan.Clan;
+import de.tobiyas.clans.datacontainer.rank.Rank;
 
 public class CommandAdmin implements CommandInterface, Observer{
 
@@ -29,41 +34,163 @@ public class CommandAdmin implements CommandInterface, Observer{
 		System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 		
 		if(command.equalsIgnoreCase("promote")) return promoteCommand(player, newArgs);
-		
 		if(command.equalsIgnoreCase("editrank")) return editRankCommand(player, newArgs);
-		
 		if(command.equalsIgnoreCase("takemoney")) return takeMoneyCommand(player, newArgs);
-		
 		if(command.equalsIgnoreCase("invite")) return inviteCommand(player, newArgs);
-		
 		if(command.equalsIgnoreCase("kick")) return kickCommand(player, newArgs);
 		
-		return false;
+		player.sendMessage(ChatColor.RED + "Could not find command. Use '/clan help' for help.");
+		return true;
 	}
 	
 	private boolean promoteCommand(Player player, String[] args){
+		Clan clan = plugin.getClanController().getClan(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You don't have a clan.");
+			return true;
+		}
 		
-		return false;
+		if(!(clan.hasPermission(player, "promote"))) {
+			player.sendMessage(ChatColor.RED + "Your rank does not have Permission to this command.");
+			return true;
+		}
+		
+		if(args.length != 2){
+			player.sendMessage(ChatColor.RED + "You have to specify 1 Player and 1 Rank.");
+			return true;
+		}
+		
+		String playerName = args[0];
+		String rankName = args[1];
+		
+		if(!(clan.hasMember(playerName))){
+			player.sendMessage(ChatColor.RED + "There is no Player named: " + ChatColor.LIGHT_PURPLE + playerName + ChatColor.RED + " in your clan.");
+			return true;
+		}
+		
+		Rank rank = clan.getRankByName(rankName);
+		if(rank == null){
+			player.sendMessage(ChatColor.RED + "The rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.RED + " does not exist in the clan.");
+			return true;
+		}
+		
+		clan.changeRank(playerName, rankName);
+		return true;
 	}
 	
 	private boolean editRankCommand(Player player, String[] args){
-		
-		return false;
+		//TODO
+		return true;
 	}
 	
 	private boolean takeMoneyCommand(Player player, String[] args){
+		Clan clan = plugin.getClanController().getClan(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You don't have a clan.");
+			return true;
+		}
 		
-		return false;
+		if(!(clan.hasPermission(player, "moneytake"))) {
+			player.sendMessage(ChatColor.RED + "Your rank does not have Permission to this command.");
+			return true;
+		}
+		
+		if(args.length != 1){
+			player.sendMessage(ChatColor.RED + "You have to specify an amount.");
+			return true;
+		}
+		
+		double amount = Double.parseDouble(args[0]);
+		double bankAmount = plugin.getMoneyManager().getBankBalance(clan.getName());
+		if(bankAmount < amount){
+			player.sendMessage(ChatColor.YELLOW + "The clan: " + ChatColor.LIGHT_PURPLE + 
+					clan.getName() + ChatColor.YELLOW + " only has: " + ChatColor.RED + 
+					bankAmount + ChatColor.YELLOW + " money left.");
+			return true;
+		}
+		
+		if(plugin.getMoneyManager().transferBankToPlayer(player, clan.getName(), amount))
+			player.sendMessage(ChatColor.GREEN + "Success. You took " + ChatColor.LIGHT_PURPLE + 
+					amount + ChatColor.GREEN + " money out of the clan bank.");
+		else
+			player.sendMessage(ChatColor.RED + "Some Thing gone wrong.");
+		
+		return true;
 	}
 	
 	private boolean inviteCommand(Player player, String[] args){
+		Clan clan = plugin.getClanController().getClan(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You don't have a clan.");
+			return true;
+		}
 		
-		return false;
+		if(!(clan.hasPermission(player, "invite"))) {
+			player.sendMessage(ChatColor.RED + "Your rank does not have Permission to this command.");
+			return true;
+		}
+		
+		if(args.length != 1){
+			player.sendMessage(ChatColor.RED + "You have to specify 1 Player.");
+			return true;
+		}
+		
+		Player invPlayer = Bukkit.getPlayer(args[0]);
+		if(invPlayer == null){
+			player.sendMessage(ChatColor.LIGHT_PURPLE + args[0] + " could not be found. You can only invite online players.");
+			return true;
+		}
+		
+		Clan invClan = plugin.getClanController().getClan(invPlayer);
+		if(invClan != null){
+			player.sendMessage(ChatColor.LIGHT_PURPLE + invPlayer.getName() + ChatColor.RED + " already has a clan.");
+			return true;
+		}
+		
+		InviteContainer invContainer = plugin.getClanController().getInvContainer();
+		if(invContainer.hasInvite(invPlayer))
+			invContainer.removeInvite(invPlayer);
+		
+		invContainer.addInvite(invPlayer, clan, player);
+		
+		invPlayer.sendMessage(ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.GREEN + " invited you to the Clan: " + ChatColor.LIGHT_PURPLE + clan.getName());
+		invPlayer.sendMessage(ChatColor.GREEN + "You can accept it by typing: " + ChatColor.LIGHT_PURPLE + "/acceptinvite");
+		return true;
 	}
 	
 	private boolean kickCommand(Player player, String[] args){
 		
-		return false;
+		Clan clan = plugin.getClanController().getClan(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You don't have a clan.");
+			return true;
+		}
+		
+		if(args.length != 1){
+			player.sendMessage(ChatColor.RED + "Usage is: " + ChatColor.LIGHT_PURPLE + "/clan admin kick <playername>");
+			return true;
+		}
+		
+		if(!(clan.hasPermission(player, "kick"))) {
+			player.sendMessage(ChatColor.RED + "Your rank does not have Permission to this command.");
+			return true;
+		}
+		
+		String kickName = args[0];		
+		if(!clan.hasMember(kickName)){
+			player.sendMessage(ChatColor.RED + "There is no Player named: " + ChatColor.LIGHT_PURPLE + kickName + ChatColor.RED + " in the clan.");
+			return true;
+		}
+		
+		clan.removeMember(kickName);
+		player.sendMessage(ChatColor.LIGHT_PURPLE + kickName + ChatColor.GREEN + " has been kicked out of your clan.");
+		
+		Player kickPlayer = Bukkit.getPlayer(kickName);
+		if(kickPlayer != null){
+			kickPlayer.sendMessage(ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.RED + " has kicked you out of the clan.");
+		}
+		return true;
+		
 	}
 	
 	
