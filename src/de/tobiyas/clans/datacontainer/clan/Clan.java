@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.tobiyas.clans.Clans;
@@ -46,7 +48,9 @@ public class Clan {
 		clanParser.createSection("clanConfig");
 		
 		clanParser.set("members." + player.getName(), "Leader");
+		
 		clanParser.set("clanConfig.defaultRank", "Member");
+		clanParser.set("clanConfig.leaderRank", "Leader");
 		clanParser.save();
 		
 		plugin.getMoneyManager().createBank(clanName);
@@ -89,6 +93,16 @@ public class Clan {
 		return mem;
 	}
 	
+	public Set<Player> getOnlineMembers(){
+		Set<Player> online = new HashSet<Player>();
+		for(String player : clanParser.getYAMLChildren("members")){
+			Player onPlayer = Bukkit.getPlayer(player);
+			if(onPlayer != null) online.add(onPlayer);
+		}
+		
+		return online;
+	}
+	
 	
 	private void loadRanks(){
 		rankContainer = new RankContainer(this);
@@ -116,6 +130,8 @@ public class Clan {
 	
 	public String parseChatMessage(Player player, String message){
 		Rank playerRank = getRankOfPlayer(player);
+		if(playerRank == null) return message;
+		message = player.getName() + ChatColor.GREEN + " " + message;
 		if(!playerRank.showRankTag()) return message;
 		return playerRank.getRankName() + message;
 	}
@@ -130,6 +146,10 @@ public class Clan {
 
 	public String getDefaultRank() {
 		return clanParser.getString("clanConfig.defaultRank");
+	}
+	
+	public String getLeaderRank() {
+		return clanParser.getString("clanConfig.leaderRank");
 	}
 
 	public void addMember(Player player, String rankName) {

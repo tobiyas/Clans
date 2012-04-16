@@ -9,6 +9,7 @@ import de.tobiyas.clans.datacontainer.clan.Clan;
 
 public class RankContainer {
 
+	@SuppressWarnings("unused")
 	private Clan clan;
 	private Set<Rank> ranks;
 	
@@ -34,10 +35,10 @@ public class RankContainer {
 		ArrayList<String> leaderList = new ArrayList<String>();
 		leaderList.add("chat");
 		leaderList.add("moneygive");
+		leaderList.add("moneytake");
 		leaderList.add("info");
 		leaderList.add("invite");
 		leaderList.add("kick");
-		leaderList.add("moneytake");
 		leaderList.add("editrank");
 		Rank leader = new Rank(rankParser, "Leader");
 		leader.createNew(leaderList);

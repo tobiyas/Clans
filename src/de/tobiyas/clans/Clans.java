@@ -31,14 +31,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import de.tobiyas.clans.chatmanager.ChatManager;
+import de.tobiyas.clans.chatmanager.CommandClanChat;
 import de.tobiyas.clans.commands.CommandDelegator;
 import de.tobiyas.clans.commands.command.singlecommand.CommandAcceptInvite;
 import de.tobiyas.clans.commands.command.singlecommand.CommandClanCreate;
+import de.tobiyas.clans.commands.command.singlecommand.CommandClanJoinLeader;
 import de.tobiyas.clans.commands.command.singlecommand.CommandDeclineInvite;
 import de.tobiyas.clans.configuration.Config;
 import de.tobiyas.clans.datacontainer.clan.ClanController;
-import de.tobiyas.clans.listeners.Listener_Block;
-import de.tobiyas.clans.listeners.Listener_Entity;
 import de.tobiyas.clans.listeners.Listener_Player;
 import de.tobiyas.clans.money.MoneyManager;
 import de.tobiyas.clans.permissions.PermissionManager;
@@ -53,6 +54,7 @@ public class Clans extends JavaPlugin{
 	
 	private PermissionManager permissionManager;
 	private MoneyManager moneyManager;
+	private ChatManager chatManager;
 	
 	private ClanController clanController;
 
@@ -67,6 +69,7 @@ public class Clans extends JavaPlugin{
 
 		permissionManager = new PermissionManager();
 		moneyManager = new MoneyManager();
+		chatManager = new ChatManager();
 		
 		setupConfiguration();
 		clanController = new ClanController();
@@ -88,9 +91,7 @@ public class Clans extends JavaPlugin{
 
 
 	private void registerEvents(){
-		new Listener_Block(this);
 		new Listener_Player(this);
-		new Listener_Entity(this);
 	}
 	
 	private void registerCommands(){
@@ -98,6 +99,8 @@ public class Clans extends JavaPlugin{
 		new CommandClanCreate();
 		new CommandAcceptInvite();
 		new CommandDeclineInvite();
+		new CommandClanChat();
+		new CommandClanJoinLeader();
 	}
 
 
@@ -124,6 +127,10 @@ public class Clans extends JavaPlugin{
 	
 	public MoneyManager getMoneyManager(){
 		return moneyManager;
+	}
+	
+	public ChatManager getChatManager(){
+		return chatManager;
 	}
 
 }

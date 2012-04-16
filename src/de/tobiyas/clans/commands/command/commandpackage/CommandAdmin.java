@@ -35,7 +35,6 @@ public class CommandAdmin implements CommandInterface, Observer{
 		
 		if(command.equalsIgnoreCase("promote")) return promoteCommand(player, newArgs);
 		if(command.equalsIgnoreCase("editrank")) return editRankCommand(player, newArgs);
-		if(command.equalsIgnoreCase("takemoney")) return takeMoneyCommand(player, newArgs);
 		if(command.equalsIgnoreCase("invite")) return inviteCommand(player, newArgs);
 		if(command.equalsIgnoreCase("kick")) return kickCommand(player, newArgs);
 		
@@ -79,42 +78,8 @@ public class CommandAdmin implements CommandInterface, Observer{
 	}
 	
 	private boolean editRankCommand(Player player, String[] args){
+		player.sendMessage(ChatColor.RED + "NOT YET IMPLEMENTED");
 		//TODO
-		return true;
-	}
-	
-	private boolean takeMoneyCommand(Player player, String[] args){
-		Clan clan = plugin.getClanController().getClan(player);
-		if(clan == null){
-			player.sendMessage(ChatColor.RED + "You don't have a clan.");
-			return true;
-		}
-		
-		if(!(clan.hasPermission(player, "moneytake"))) {
-			player.sendMessage(ChatColor.RED + "Your rank does not have Permission to this command.");
-			return true;
-		}
-		
-		if(args.length != 1){
-			player.sendMessage(ChatColor.RED + "You have to specify an amount.");
-			return true;
-		}
-		
-		double amount = Double.parseDouble(args[0]);
-		double bankAmount = plugin.getMoneyManager().getBankBalance(clan.getName());
-		if(bankAmount < amount){
-			player.sendMessage(ChatColor.YELLOW + "The clan: " + ChatColor.LIGHT_PURPLE + 
-					clan.getName() + ChatColor.YELLOW + " only has: " + ChatColor.RED + 
-					bankAmount + ChatColor.YELLOW + " money left.");
-			return true;
-		}
-		
-		if(plugin.getMoneyManager().transferBankToPlayer(player, clan.getName(), amount))
-			player.sendMessage(ChatColor.GREEN + "Success. You took " + ChatColor.LIGHT_PURPLE + 
-					amount + ChatColor.GREEN + " money out of the clan bank.");
-		else
-			player.sendMessage(ChatColor.RED + "Some Thing gone wrong.");
-		
 		return true;
 	}
 	
@@ -202,10 +167,14 @@ public class CommandAdmin implements CommandInterface, Observer{
 			
 		Player player = parameter.getPlayer();
 		String[] arg = parameter.getArgs();
-		delegator.addUnknown(player, 10);
 
-		if(!parameter.getCategory().equals(identString)) return;	
-		if(run(player, arg)) delegator.addUnknown(player, 1);
+		if(parameter.getCategory().equals(identString))
+			if(run(player, arg)){
+				delegator.addUnknown(player, 11);
+				return;
+			}
+		
+		delegator.addUnknown(player, 10);
 	}
 
 }

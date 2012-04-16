@@ -83,10 +83,14 @@ public class CommandHelp implements CommandInterface, Observer{
 			
 		Player player = parameter.getPlayer();
 		String[] arg = parameter.getArgs();
-		delegator.addUnknown(player, 10);
 
-		if(!parameter.getCategory().equals(identString)) return;	
-		if(run(player, arg)) delegator.addUnknown(player, 1);
+		if(parameter.getCategory().equals(identString))
+			if(run(player, arg)){
+				delegator.addUnknown(player, 11);
+				return;
+			}
+		
+		delegator.addUnknown(player, 10);
 	}
 
 }

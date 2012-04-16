@@ -14,7 +14,7 @@ import de.tobiyas.clans.commands.command.CommandParameter;
 import de.tobiyas.clans.commands.command.commandpackage.CommandAdmin;
 import de.tobiyas.clans.commands.command.commandpackage.CommandHelp;
 import de.tobiyas.clans.commands.command.commandpackage.CommandInfo;
-import de.tobiyas.clans.commands.command.commandpackage.CommandMember;
+import de.tobiyas.clans.commands.command.commandpackage.CommandMoney;
 
 public class CommandDelegator extends Observable implements CommandExecutor{
 	
@@ -38,9 +38,9 @@ public class CommandDelegator extends Observable implements CommandExecutor{
 	
 	private void initCommands(){
 		new CommandAdmin(this);
-		new CommandMember(this);
 		new CommandInfo(this);
 		new CommandHelp(this);
+		new CommandMoney(this);
 	}
 	
 	public boolean ExecuteCommand(Player player, String[] args){
@@ -78,10 +78,10 @@ public class CommandDelegator extends Observable implements CommandExecutor{
 		callMap.remove(player.getName());
 		callMap.put(player.getName(), tempValue);
 		
-		if(tempValue == 40)
+		if(tempValue == (countObservers() * 10))
 			player.sendMessage(ChatColor.RED + "The Command is unknown by Clans.");
 		
-		if(tempValue >= 40)
+		if(tempValue >= (countObservers() * 10))
 			callMap.remove(player.getName());
 	}
 }

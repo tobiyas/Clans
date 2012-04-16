@@ -12,9 +12,9 @@ commands:
     aliases: []
     usage:  |
             /clan
-  gchat:
-    description: guild chat
-    aliases: [g]
+  cchat:
+    description: clan chat
+    aliases: [cc]
     usage:  |
             /gchat <message>
   clancreate:
@@ -32,3 +32,8 @@ commands:
     aliases: []
     usage:  |
             /declineinvite
+  clanjoinleader:
+    description: joins the leaderrank of a clan
+    aliases: []
+    usage:  |
+            /clanjoinleader <clanName>

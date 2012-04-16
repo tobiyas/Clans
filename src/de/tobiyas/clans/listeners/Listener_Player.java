@@ -11,6 +11,8 @@ package de.tobiyas.clans.listeners;
 import org.bukkit.event.Listener; 
 import org.bukkit.event.EventHandler; 
 
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,19 +29,12 @@ public class Listener_Player implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerTeleport(PlayerTeleportEvent event){
+	public void onPlayerDeath(PlayerDeathEvent event){
 		// TODO handle that event
 	}
 
 	@EventHandler
-	public void onPlayerRespawn(PlayerRespawnEvent event){
-		// TODO handle that event
+	public void onPlayerChat(PlayerChatEvent event){
+		
 	}
-
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event){
-		// TODO handle that event
-	}
-
-
 }

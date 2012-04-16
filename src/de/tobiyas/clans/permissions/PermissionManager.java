@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import de.tobiyas.clans.Clans;
 import de.tobiyas.clans.permissions.plugins.BukkitPermissionsPermissions;
 import de.tobiyas.clans.permissions.plugins.GroupManagerPermissions;
+import de.tobiyas.clans.permissions.plugins.OpPermissions;
 import de.tobiyas.clans.permissions.plugins.PEXPermissions;
 import de.tobiyas.clans.permissions.plugins.PermissionPlugin;
 import de.tobiyas.clans.permissions.plugins.VaultPermissions;
@@ -22,12 +23,9 @@ public class PermissionManager{
 	private PermissionPlugin permPlugin;
 	private Clans plugin;
 	
-	private boolean noPermissionsFound;
-	
 	
 	public PermissionManager(){
 		plugin = Clans.getPlugin();
-		noPermissionsFound = false;
 		checkForPermissionsPlugin();
 	}
 	
@@ -65,8 +63,10 @@ public class PermissionManager{
 			}
 		}catch(NoClassDefFoundError e){}
 		
-		plugin.log("CRITICAL: No Permission-System hooked. Plugin will not work properly. Use one of the following Systems: Vault, PermissionsEx, GroupManager, BukkitPermissions.");
-		noPermissionsFound = true;
+		permPlugin = new OpPermissions();
+		plugin.log("CRITICAL: No Permission-System hooked. Plugin will not work properly. " + 
+					"Use one of the following Systems: Vault, PermissionsEx, GroupManager, BukkitPermissions. " + 
+					"Using Op-Status as Permission.");	
 	}
 
 	
@@ -78,7 +78,6 @@ public class PermissionManager{
 	 * @return if the Player has Permissions
 	 */
 	private boolean checkPermissionsIntern(CommandSender sender, String permissionNode){
-		if(noPermissionsFound) return false;
 		if(sender == null) return false;
 		return permPlugin.getPermissions(sender, permissionNode);
 	}
@@ -96,17 +95,14 @@ public class PermissionManager{
 	}
 	
 	public ArrayList<String> getAllGroups(){
-		if(noPermissionsFound) return new ArrayList<String>();
 		return permPlugin.getGroups();
 	}
 	
 	public String getGroupOfPlayer(Player player){
-		if(noPermissionsFound) return "";
 		return permPlugin.getGroupOfPlayer(player);
 	}
 	
 	public String getPermissionsName(){
-		if(noPermissionsFound) return "NONE";
 		return permPlugin.getName();
 	}
 	
