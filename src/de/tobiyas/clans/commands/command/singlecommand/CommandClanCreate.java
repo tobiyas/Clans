@@ -36,7 +36,7 @@ public class CommandClanCreate implements CommandExecutor{
 			return true;
 		}
 		
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan != null){
 			player.sendMessage(ChatColor.RED + "You are already in a clan: " + ChatColor.LIGHT_PURPLE + clan.getName() + ChatColor.RED + ". You have to leave it first.");
 			return true;

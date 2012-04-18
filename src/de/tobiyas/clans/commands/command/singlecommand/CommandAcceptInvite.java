@@ -39,7 +39,7 @@ public class CommandAcceptInvite implements CommandExecutor {
 			return true;
 		}
 		
-		Clan actClan = plugin.getClanController().getClan(player);
+		Clan actClan = plugin.getClanController().getClanOfPlayer(player);
 		if(actClan != null){
 			player.sendMessage(ChatColor.RED + "You can't accept the request. You are already in an clan: " + ChatColor.LIGHT_PURPLE + actClan.getName());
 			return true;

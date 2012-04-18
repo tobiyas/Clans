@@ -43,7 +43,7 @@ public class CommandAdmin implements CommandInterface, Observer{
 	}
 	
 	private boolean promoteCommand(Player player, String[] args){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You don't have a clan.");
 			return true;
@@ -84,7 +84,7 @@ public class CommandAdmin implements CommandInterface, Observer{
 	}
 	
 	private boolean inviteCommand(Player player, String[] args){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You don't have a clan.");
 			return true;
@@ -106,7 +106,7 @@ public class CommandAdmin implements CommandInterface, Observer{
 			return true;
 		}
 		
-		Clan invClan = plugin.getClanController().getClan(invPlayer);
+		Clan invClan = plugin.getClanController().getClanOfPlayer(invPlayer);
 		if(invClan != null){
 			player.sendMessage(ChatColor.LIGHT_PURPLE + invPlayer.getName() + ChatColor.RED + " already has a clan.");
 			return true;
@@ -125,7 +125,7 @@ public class CommandAdmin implements CommandInterface, Observer{
 	
 	private boolean kickCommand(Player player, String[] args){
 		
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You don't have a clan.");
 			return true;

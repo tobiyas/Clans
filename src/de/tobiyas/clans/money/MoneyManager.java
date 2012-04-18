@@ -90,5 +90,18 @@ public class MoneyManager {
 		if(!isActive) return;
 		moneyPlugin.removeBankAccount(clanName);
 	}
+	
+	public boolean transferToBank(String clanName, double amount){
+		if(!isActive) return false;
+		if(plugin.getClanController().getClan(clanName) == null) return false;
+		moneyPlugin.addToBankAccount(clanName, amount);
+		return true;
+	}
+	
+	public boolean withdrawFromBank(String clanName, double amount){
+		if(!isActive) return false;
+		if(plugin.getClanController().getClan(clanName) == null) return false;
+		return moneyPlugin.withdrawFromBankAccount(clanName, amount);
+	}
 
 }

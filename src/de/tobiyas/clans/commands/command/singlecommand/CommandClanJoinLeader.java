@@ -40,7 +40,7 @@ public class CommandClanJoinLeader implements CommandExecutor{
 			return true;
 		}
 		
-		Clan tempClan = plugin.getClanController().getClan(player);
+		Clan tempClan = plugin.getClanController().getClanOfPlayer(player);
 		if(tempClan != null){
 			player.sendMessage(ChatColor.RED + "You still have a clan. You have to leave it first.");
 			return true;

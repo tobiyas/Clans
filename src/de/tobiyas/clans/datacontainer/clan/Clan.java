@@ -3,6 +3,7 @@ package de.tobiyas.clans.datacontainer.clan;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -47,7 +48,7 @@ public class Clan {
 		clanParser.createSection("members");
 		clanParser.createSection("clanConfig");
 		
-		clanParser.set("members." + player.getName(), "Leader");
+		if(player != null) clanParser.set("members." + player.getName(), "Leader");
 		
 		clanParser.set("clanConfig.defaultRank", "Member");
 		clanParser.set("clanConfig.leaderRank", "Leader");
@@ -153,7 +154,10 @@ public class Clan {
 	}
 
 	public void addMember(Player player, String rankName) {
-		String playerName = player.getName();
+		addMember(player.getName(), rankName);
+	}
+	
+	public void addMember(String playerName, String rankName){
 		Rank rank = getRankByName(rankName);
 		if(rank == null){
 			plugin.log("Something gone wrong in adding member: " + playerName + " to rank: " + rankName);
@@ -188,5 +192,33 @@ public class Clan {
 		if(rank == null) return false;
 		
 		return rank.hasPermission(permission);
+	}
+	
+	public Set<String> getAllMembers(){
+		return clanParser.getYAMLChildren("members");
+	}
+
+	public void delete() {
+		File folder = new File(clanPath);
+		File members = new File(clanPath + "members.yml");
+		File ranks = new File(clanPath + "ranks.yml");
+		
+		ranks.delete();
+		members.delete();
+		folder.delete();
+		plugin.getMoneyManager().deleteBank(clanName);
+	}
+
+	public void addNewRank(String rankName, List<String> permissionList) {
+		rankContainer.addNewRank(rankName, permissionList);
+	}
+
+	public void removeRank(String rankName) {
+		rankContainer.removeRank(rankName);
+		for(String member : clanParser.getYAMLChildren("members")){
+			String rank = clanParser.getString("members." + member);
+			if(rank.equalsIgnoreCase(rankName))
+				clanParser.set("members." + member, null);
+		}
 	}
 }

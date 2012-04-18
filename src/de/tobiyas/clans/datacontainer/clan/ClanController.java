@@ -35,7 +35,6 @@ public class ClanController {
 			return;
 		}
 		
-		
 		//File filter for directories
 		FileFilter fileFilter = new FileFilter() {
 			public boolean accept(File file) {
@@ -58,7 +57,15 @@ public class ClanController {
 		return true;
 	}
 	
-	public Clan getClan(Player player){
+	public boolean createNewClan(String clanName) {
+		return createNewClan(null, clanName);
+	}
+	
+	public Clan getClanOfPlayer(Player player){
+		return getClanOfPlayer(player.getName());
+	}
+	
+	public Clan getClanOfPlayer(String player){
 		for(Clan clan : clans){
 			if(clan.hasMember(player)) return clan;
 		}
@@ -74,5 +81,13 @@ public class ClanController {
 	
 	public InviteContainer getInvContainer(){
 		return invContainer;
+	}
+	
+	public void removeClan(String clanName){
+		Clan clan = getClan(clanName);
+		if(clan == null) return;
+		
+		clan.delete();
+		clans.remove(clan);
 	}
 }

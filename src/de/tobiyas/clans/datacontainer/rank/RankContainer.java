@@ -2,6 +2,7 @@ package de.tobiyas.clans.datacontainer.rank;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.tobiyas.clans.configuration.YamlConfigExtended;
@@ -11,7 +12,7 @@ public class RankContainer {
 
 	@SuppressWarnings("unused")
 	private Clan clan;
-	private Set<Rank> ranks;
+	private HashSet<Rank> ranks;
 	
 	private YamlConfigExtended rankParser;
 	
@@ -64,6 +65,21 @@ public class RankContainer {
 			if(rank.getRankName().equalsIgnoreCase(rankName)) return rank;
 		
 		return null;
+	}
+
+	public void addNewRank(String rankName, List<String> permissionList) {
+		Rank rank = new Rank(rankParser, rankName);
+		rank.setPermissions(permissionList);
+	}
+
+	public void removeRank(String rankName) {
+		for(Rank rank : ranks){
+			if(rank.getRankName().equalsIgnoreCase(rankName)){
+				rank.remove();
+				ranks.remove(rank);
+				return;
+			}
+		}
 	}
 	
 }

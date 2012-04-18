@@ -25,7 +25,7 @@ public class Rank {
 		return parser.getStringList("rank." + rankName + ".permissions");
 	}
 	
-	private void setPermissions(List<String> permissions){
+	public void setPermissions(List<String> permissions){
 		parser.set("rank." + rankName + ".permissions", permissions);
 		parser.save();
 	}
@@ -35,7 +35,7 @@ public class Rank {
 		return parser.getString("rank." + rankName + ".tag", "[" + rankName + "]");
 	}
 	
-	private void setRankTag(String tag){
+	public void setRankTag(String tag){
 		parser.set("rank." + rankName + ".tag", tag);
 		parser.save();
 	}
@@ -99,5 +99,14 @@ public class Rank {
 	
 	public String getRankName(){
 		return rankName;
+	}
+
+	public void remove() {
+		parser.set("ranks." + rankName + ".permissions", null);
+		parser.set("ranks." + rankName + ".tag", null);
+		parser.set("ranks." + rankName + ".showtag", null);
+		parser.set("ranks." + rankName, null);
+		
+		parser.save();
 	}
 }

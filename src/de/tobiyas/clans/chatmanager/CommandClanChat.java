@@ -31,7 +31,7 @@ public class CommandClanChat implements CommandExecutor{
 		}
 		
 		Player player = (Player) sender;
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You don't have a clan.");
 			return true;
@@ -49,7 +49,7 @@ public class CommandClanChat implements CommandExecutor{
 		for(String messageSnippet : args)
 			message += messageSnippet + " ";
 		
-		plugin.getChatManager().sendMessageToClan(player, clan, message);
+		plugin.getChatManager().playerSendMessageToClan(player, clan, message);
 		return true;
 	}
 

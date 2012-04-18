@@ -30,7 +30,7 @@ public class CommandInfo implements CommandInterface, Observer {
 	public boolean run(Player player, String[] args) {
 		if(args.length != 1) return false;
 		
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You are not in a clan.");
 			return true;
@@ -53,7 +53,7 @@ public class CommandInfo implements CommandInterface, Observer {
 	}
 	
 	private boolean moneyCommand(Player player){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You are not in any clan.");
 			return true;
@@ -68,7 +68,7 @@ public class CommandInfo implements CommandInterface, Observer {
 	}
 	
 	private boolean onlineCommand(Player player){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You are not in any clan.");
 			return true;
@@ -97,7 +97,7 @@ public class CommandInfo implements CommandInterface, Observer {
 	}
 	
 	private boolean membersCommand(Player player){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You are not in any clan.");
 			return true;
@@ -121,7 +121,7 @@ public class CommandInfo implements CommandInterface, Observer {
 	}
 	
 	private boolean permissionsCommand(Player player){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You are not in any clan.");
 			return true;

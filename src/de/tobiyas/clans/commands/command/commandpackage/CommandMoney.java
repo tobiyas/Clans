@@ -42,7 +42,7 @@ public class CommandMoney implements CommandInterface, Observer{
 	}
 	
 	private boolean parseGiveMoney(Player player, String[] args){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You don't have a clan.");
 			return true;
@@ -70,7 +70,7 @@ public class CommandMoney implements CommandInterface, Observer{
 	}
 	
 	private boolean parseTakeMoney(Player player, String[] args){
-		Clan clan = plugin.getClanController().getClan(player);
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You don't have a clan.");
 			return true;
