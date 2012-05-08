@@ -8,16 +8,13 @@
 package de.tobiyas.clans.listeners;
 
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener; 
 import org.bukkit.event.EventHandler; 
 
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-
 import de.tobiyas.clans.Clans;
+import de.tobiyas.clans.datacontainer.clan.Clan;
 
 
 public class Listener_Player implements Listener {
@@ -29,12 +26,10 @@ public class Listener_Player implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event){
-		// TODO handle that event
-	}
-
-	@EventHandler
 	public void onPlayerChat(PlayerChatEvent event){
-		
+		Player player = event.getPlayer();
+		Clan clan = plugin.getClanController().getClan(player.getName());
+		if(clan == null) return;
+		//handle chat stuff
 	}
 }

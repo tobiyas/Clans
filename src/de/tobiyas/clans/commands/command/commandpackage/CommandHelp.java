@@ -72,7 +72,10 @@ public class CommandHelp implements CommandInterface, Observer{
 	}
 	
 	private boolean pasteStdHelp(Player player){
-		player.sendMessage(ChatColor.RED + "Usage:" + ChatColor.YELLOW + " /clan help [admin;info;kick;invite;promote;editrank;moneytake]");
+		player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan help" + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "Usage:" + ChatColor.RED + " /clan help " + ChatColor.YELLOW +
+				"[" + ChatColor.RED + "admin" + ChatColor.YELLOW + ";" + ChatColor.RED + "info" + ChatColor.YELLOW + ";" + 
+				ChatColor.RED + "money" + ChatColor.YELLOW + ";" + ChatColor.RED + "help" + ChatColor.YELLOW + "]");
 		return true;
 	}
 

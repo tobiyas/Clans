@@ -132,9 +132,9 @@ public class Clan {
 	public String parseChatMessage(Player player, String message){
 		Rank playerRank = getRankOfPlayer(player);
 		if(playerRank == null) return message;
-		message = player.getName() + ChatColor.GREEN + " " + message;
-		if(!playerRank.showRankTag()) return message;
-		return playerRank.getRankName() + message;
+		message = " " + player.getName() + ChatColor.GREEN + ": " + message;
+		if(!playerRank.showRankTag()) return ChatColor.GREEN + "[CLAN]" + ChatColor.WHITE + message;
+		return ChatColor.GREEN + "[CLAN] " + ChatColor.WHITE + playerRank.getRankTag() + message;
 	}
 	
 	public String getName(){
@@ -213,12 +213,13 @@ public class Clan {
 		rankContainer.addNewRank(rankName, permissionList);
 	}
 
-	public void removeRank(String rankName) {
-		rankContainer.removeRank(rankName);
+	public boolean removeRank(String rankName) {
+		if(!rankContainer.removeRank(rankName)) return false;
 		for(String member : clanParser.getYAMLChildren("members")){
 			String rank = clanParser.getString("members." + member);
 			if(rank.equalsIgnoreCase(rankName))
 				clanParser.set("members." + member, null);
 		}
+		return true;
 	}
 }

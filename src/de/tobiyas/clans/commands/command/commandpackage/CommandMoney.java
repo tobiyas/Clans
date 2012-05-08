@@ -24,10 +24,8 @@ public class CommandMoney implements CommandInterface, Observer{
 
 	@Override
 	public boolean run(Player player, String[] args) {
-		if(args.length != 2){
-			player.sendMessage(ChatColor.RED + "Usage: /clan money [give;take] [amount]");
-			return true;
-		}
+		if(args.length != 2)
+			return postUsage(player);
 		
 		String command = args[0];
 		String[] newArgs = new String[args.length - 1];
@@ -37,7 +35,13 @@ public class CommandMoney implements CommandInterface, Observer{
 		if(command.equals("take")) return parseTakeMoney(player, newArgs);
 		
 		
-		player.sendMessage(ChatColor.RED + "Usage: /clan money [give;take] [amount]");	
+		return postUsage(player);
+	}
+	
+	private boolean postUsage(Player player) {
+		player.sendMessage(ChatColor.YELLOW + "===USAGE:" + ChatColor.RED + " /clan admin" + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "/clan money [" + ChatColor.RED + "give" + 
+				ChatColor.YELLOW + ";" + ChatColor.RED + "take" + ChatColor.YELLOW + "]");
 		return true;
 	}
 	

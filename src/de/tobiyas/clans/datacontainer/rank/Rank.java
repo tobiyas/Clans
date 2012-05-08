@@ -31,7 +31,7 @@ public class Rank {
 	}
 	
 	
-	private String getRankTag(){
+	public String getRankTag(){
 		return parser.getString("rank." + rankName + ".tag", "[" + rankName + "]");
 	}
 	

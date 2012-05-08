@@ -41,6 +41,7 @@ public class RankContainer {
 		leaderList.add("invite");
 		leaderList.add("kick");
 		leaderList.add("editrank");
+		leaderList.add("promote");
 		Rank leader = new Rank(rankParser, "Leader");
 		leader.createNew(leaderList);
 		
@@ -72,14 +73,15 @@ public class RankContainer {
 		rank.setPermissions(permissionList);
 	}
 
-	public void removeRank(String rankName) {
+	public boolean removeRank(String rankName) {
 		for(Rank rank : ranks){
 			if(rank.getRankName().equalsIgnoreCase(rankName)){
 				rank.remove();
 				ranks.remove(rank);
-				return;
+				return true; 
 			}
 		}
+		return false;
 	}
 	
 }

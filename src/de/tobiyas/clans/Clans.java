@@ -1,5 +1,5 @@
 /*
- * CastleSiege - by tobiyas
+ * Clans - by tobiyas
  * http://
  *
  * powered by Kickstarter

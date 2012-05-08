@@ -27,9 +27,7 @@ public class CommandInfo implements CommandInterface, Observer {
 	}
 	
 	@Override
-	public boolean run(Player player, String[] args) {
-		if(args.length != 1) return false;
-		
+	public boolean run(Player player, String[] args) {		
 		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
 			player.sendMessage(ChatColor.RED + "You are not in a clan.");
@@ -41,15 +39,15 @@ public class CommandInfo implements CommandInterface, Observer {
 			return true;
 		}
 		
+		if(args.length == 0) return postSummary(player);
+		
 		String command = args[0];
 		if(command.equalsIgnoreCase("money")) return moneyCommand(player);
 		if(command.equalsIgnoreCase("online")) return onlineCommand(player);
 		if(command.equalsIgnoreCase("members")) return membersCommand(player);
 		if(command.equalsIgnoreCase("permissions")) return permissionsCommand(player); 
 		
-		//TODO add Std infos (name, anzahl members, usw.)
-		player.sendMessage(ChatColor.RED + "No known command. use '/clan help info' if you search a command.");
-		return true;
+		return postSummary(player);
 	}
 	
 	private boolean moneyCommand(Player player){
@@ -61,6 +59,7 @@ public class CommandInfo implements CommandInterface, Observer {
 		
 		double bankBalance = plugin.getMoneyManager().getBankBalance(clan.getName());
 		
+		player.sendMessage(ChatColor.YELLOW + "===INFO MONEY===");
 		player.sendMessage(ChatColor.YELLOW + "The clan: " + ChatColor.LIGHT_PURPLE + clan.getName() + 
 				ChatColor.YELLOW + " has currently " + ChatColor.GREEN + bankBalance +
 				ChatColor.YELLOW + " money.");
@@ -74,6 +73,7 @@ public class CommandInfo implements CommandInterface, Observer {
 			return true;
 		}
 		
+		player.sendMessage(ChatColor.YELLOW + "===INFO ONLINE===");
 		player.sendMessage(ChatColor.AQUA + "Currently online in: " + ChatColor.DARK_PURPLE + clan.getName());
 		HashMap<String, Set<String>> rankedMembers = clan.getMembersRanked();
 		for(String rank : rankedMembers.keySet()){
@@ -103,6 +103,7 @@ public class CommandInfo implements CommandInterface, Observer {
 			return true;
 		}
 		
+		player.sendMessage(ChatColor.YELLOW + "===INFO MEMBERS===");
 		player.sendMessage(ChatColor.AQUA + "Members of: " + ChatColor.DARK_PURPLE + clan.getName());
 		HashMap<String, Set<String>> rankedMembers = clan.getMembersRanked();
 		for(String rank : rankedMembers.keySet()){
@@ -133,8 +134,43 @@ public class CommandInfo implements CommandInterface, Observer {
 			return true;
 		}
 		
+		player.sendMessage(ChatColor.YELLOW + "===INFO PERMISSIONS===");
 		player.sendMessage(ChatColor.YELLOW + "Your Rank: " + ChatColor.LIGHT_PURPLE + rank.getRankName());
 		player.sendMessage(ChatColor.YELLOW + "Your Permissions: " + ChatColor.LIGHT_PURPLE + rank.getPermissionString());
+		
+		return true;
+	}
+	
+	private boolean postSummary(Player player){
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You are not in any clan.");
+			return true;
+		}
+		
+		Rank rank = clan.getRankOfPlayer(player);
+		if(rank == null){
+			player.sendMessage(ChatColor.RED + "A Strange Error Accured. You have no Rank? Please contact the support.");
+			return true;
+		}
+		
+		Set<String> members = clan.getAllMembers();
+		
+		String memberString = "";
+		for(String member : members){
+			memberString += ChatColor.LIGHT_PURPLE + member + ChatColor.YELLOW + ",";
+		}
+		if(members.size() != 0)
+			memberString.substring(0, memberString.length() - 1);
+		
+		player.sendMessage(ChatColor.YELLOW + "===CLAN INFO: " + ChatColor.LIGHT_PURPLE + clan.getName() + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "Your Rank: " + ChatColor.LIGHT_PURPLE + rank.getRankName());
+		player.sendMessage(ChatColor.YELLOW + "Members in Clan: " + memberString);
+		
+		player.sendMessage(ChatColor.YELLOW + "For further Information use /clan info [" + 
+		ChatColor.RED + "money" + ChatColor.YELLOW + ";" + ChatColor.RED + "online"
+		+ ChatColor.YELLOW + ";" + ChatColor.RED + "members" +
+		ChatColor.YELLOW + ";" + ChatColor.RED + "permissions" + ChatColor.YELLOW + "]");
 		
 		return true;
 	}

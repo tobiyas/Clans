@@ -27,7 +27,7 @@ public class CommandAdmin implements CommandInterface, Observer{
 	
 	@Override
 	public boolean run(Player player, String[] args) {
-		if(args.length == 0) return false;
+		if(args.length == 0) return postUsage(player);
 		
 		String command = args[0];
 		String[] newArgs = new String[args.length - 1];
@@ -38,10 +38,18 @@ public class CommandAdmin implements CommandInterface, Observer{
 		if(command.equalsIgnoreCase("invite")) return inviteCommand(player, newArgs);
 		if(command.equalsIgnoreCase("kick")) return kickCommand(player, newArgs);
 		
-		player.sendMessage(ChatColor.RED + "Could not find command. Use '/clan help' for help.");
-		return true;
+		return postUsage(player);
 	}
 	
+	private boolean postUsage(Player player) {
+		player.sendMessage(ChatColor.YELLOW + "===USAGE:" + ChatColor.RED + " /clan admin" + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "/clan admin [" + ChatColor.RED + "promote" + 
+				ChatColor.YELLOW + ";" + ChatColor.RED + "editrank" + ChatColor.YELLOW + ";" + 
+				ChatColor.RED + "invite" + ChatColor.YELLOW + ";" + ChatColor.RED + "kick" +
+				ChatColor.YELLOW + "]");
+		return true;
+	}
+
 	private boolean promoteCommand(Player player, String[] args){
 		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
@@ -78,11 +86,197 @@ public class CommandAdmin implements CommandInterface, Observer{
 	}
 	
 	private boolean editRankCommand(Player player, String[] args){
-		player.sendMessage(ChatColor.RED + "NOT YET IMPLEMENTED");
-		//TODO
+		if(args.length == 0){
+			player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank" + ChatColor.YELLOW + "===");
+			player.sendMessage(ChatColor.YELLOW + "Usage: /clan admin editrank " + "<permissions;name;tag;showtag;add;remove> <rankName> [value]");
+			return true;
+		}
+		
+		Clan clan = plugin.getClanController().getClanOfPlayer(player);
+		if(clan == null){
+			player.sendMessage(ChatColor.RED + "You have no clan.");
+			return true;
+		}
+		
+		Rank rank = clan.getRankOfPlayer(player);
+		if(rank == null){
+			player.sendMessage(ChatColor.RED + "Your rank can't be resolved.");
+			return true;
+		}
+		
+		if(!rank.hasPermission("editrank")){
+			player.sendMessage(ChatColor.RED + "Your Rank does not have the Permission to edit ranks.");
+			return true;
+		}
+		
+		String command = args[0];
+		if(command.equalsIgnoreCase("permissions")) return editPermissions(player, clan, args);
+		if(command.equalsIgnoreCase("name")) return editName(player, clan, args);
+		if(command.equalsIgnoreCase("tag")) return editTag(player, clan, args);
+		if(command.equalsIgnoreCase("showtag")) return editShowTag(player, clan, args);
+		if(command.equalsIgnoreCase("add")) return addRank(player, clan, args);
+		if(command.equalsIgnoreCase("remove")) return removeRank(player, clan, args);
+		
+		player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank" + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "Usage: /clan admin editrank " + "<permissions;name;tag;showtag;add;remove> <rankName> [value]");
 		return true;
 	}
 	
+	private boolean removeRank(Player player, Clan clan, String[] args) {
+		if(args.length < 2){
+			player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank remove" + ChatColor.YELLOW + "===");
+			player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin editrank remove " + ChatColor.LIGHT_PURPLE +
+					" <rankname>");
+			return true;
+		}
+		
+		String rankName = "";
+		
+		for(int i = 1; i < args.length; i++)
+			rankName += args[i] + " ";
+		
+		rankName = rankName.substring(0, rankName.length() - 1);
+		
+		if(clan.removeRank(rankName)){
+			player.sendMessage(ChatColor.GREEN + "Rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.GREEN + " has been removed.");
+			return true;
+		}
+		player.sendMessage(ChatColor.RED + "Could not find Rank: " + ChatColor.LIGHT_PURPLE + rankName);
+		return true;
+	}
+
+	private boolean addRank(Player player, Clan clan, String[] args) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean editShowTag(Player player, Clan clan, String[] args) {
+		if(args.length < 3){
+			player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank showtag" + ChatColor.YELLOW + "===");
+			player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin editrank showtag " + ChatColor.LIGHT_PURPLE +
+					" <rankname> <true/false/on/off>");
+			return true;
+		}
+		
+		String rankName = "";
+		for(int i = 1; i < args.length - 1; i++)
+			rankName += args[i] + " ";
+		
+		rankName = rankName.substring(0, rankName.length() - 1);
+		
+		Rank rank = clan.getRankByName(rankName);
+		if(rank == null){
+			player.sendMessage(ChatColor.RED + "The rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.RED + " was not found.");
+			return true;
+		}
+		
+		String value = args[args.length - 1];
+		if(value == "0" || value == "false" || value == "off"){
+			rank.changeTagVisible(false);
+			player.sendMessage(ChatColor.GREEN + "Changed ShowTag of Rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.GREEN + " to false.");
+			return true;
+		}
+		
+		if(value == "1" || value == "true" || value == "on"){
+			rank.changeTagVisible(true);
+			player.sendMessage(ChatColor.GREEN + "Changed ShowTag of Rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.GREEN + " to true.");
+			return true;
+		}
+		
+		
+		player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank showtag" + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin editrank showtag " + ChatColor.LIGHT_PURPLE +
+				" <rankname> <true/false/on/off>");
+		return true;
+	}
+
+	private boolean editTag(Player player, Clan clan, String[] args) {
+		if(args.length < 3){
+			player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank edittag" + ChatColor.YELLOW + "===");
+			player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin editrank edittag " + ChatColor.LIGHT_PURPLE +
+					" <rankname> <tag>");
+			return true;
+		}
+		
+		String rankName = "";
+		
+		int i;
+		for(i = 1; i < args.length - 1; i++){
+			rankName += args[i];
+			if(clan.getRankByName(rankName) != null) break;
+			rankName += " ";
+		}
+		
+		Rank rank = clan.getRankByName(rankName);
+		if(rank == null){
+			player.sendMessage(ChatColor.RED + "The rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.RED + " was not found.");
+			return true;
+		}
+		
+		String newTag = "";
+		for(int j = i; j < args.length - 1; j++){
+			newTag += args[j];
+			if(j != args.length - 1) newTag += " ";
+		}
+		
+		rank.changeTag(newTag);
+		player.sendMessage(ChatColor.GREEN + "The Tag of: " + ChatColor.LIGHT_PURPLE + rank.getRankName() + ChatColor.GREEN + " has been changed to: " + ChatColor.LIGHT_PURPLE + newTag);
+		
+		return true;
+	}
+
+	private boolean editName(Player player, Clan clan, String[] args) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean editPermissions(Player player, Clan clan, String[] args) {
+		if(args.length < 3){
+			player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank editpermissions" + ChatColor.YELLOW + "===");
+			player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin editrank editpermissions " + ChatColor.LIGHT_PURPLE +
+					" <rankname> <+permission/-permission>");
+			return true;
+		}
+		
+		String rankName = "";
+		for(int i = 1; i < args.length - 1; i++)
+			rankName += args[i] + " ";
+		
+		rankName = rankName.substring(0, rankName.length() - 1);
+		
+		Rank rank = clan.getRankByName(rankName);
+		if(rank == null){
+			player.sendMessage(ChatColor.RED + "The rank: " + ChatColor.LIGHT_PURPLE + rankName + ChatColor.RED + " was not found.");
+			return true;
+		}
+		
+		String value = args[args.length - 1];
+		
+		if(value.charAt(0) == '-'){
+			if(rank.removePermission(value)){
+				player.sendMessage(ChatColor.GREEN + "Permission " + ChatColor.LIGHT_PURPLE + value + ChatColor.GREEN + " removed.");
+			}else{
+				player.sendMessage(ChatColor.GREEN + "Permission " + ChatColor.LIGHT_PURPLE + value + ChatColor.GREEN + " not found.");
+			}
+			return true;
+		}
+		
+		if(value.charAt(0) == '+'){
+			if(rank.addPermission(value)){
+				player.sendMessage(ChatColor.GREEN + "Permission " + ChatColor.LIGHT_PURPLE + value + ChatColor.GREEN + " added.");
+			}else{
+				player.sendMessage(ChatColor.GREEN + "Permission " + ChatColor.LIGHT_PURPLE + value + ChatColor.GREEN + " not found.");
+			}
+			return true;
+		}
+		
+		
+		player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin editrank editpermissions" + ChatColor.YELLOW + "===");
+		player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin editrank editpermissions " + ChatColor.LIGHT_PURPLE +
+				" <rankname> <+permission/-permission>");
+		return true;
+	}
+
 	private boolean inviteCommand(Player player, String[] args){
 		Clan clan = plugin.getClanController().getClanOfPlayer(player);
 		if(clan == null){
@@ -132,7 +326,8 @@ public class CommandAdmin implements CommandInterface, Observer{
 		}
 		
 		if(args.length != 1){
-			player.sendMessage(ChatColor.RED + "Usage is: " + ChatColor.LIGHT_PURPLE + "/clan admin kick <playername>");
+			player.sendMessage(ChatColor.YELLOW + "===USAGE: " + ChatColor.RED + "/clan admin kick" + ChatColor.YELLOW + "===");
+			player.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.RED + "/clan admin kick" + ChatColor.LIGHT_PURPLE +" <playername>");
 			return true;
 		}
 		
@@ -148,7 +343,9 @@ public class CommandAdmin implements CommandInterface, Observer{
 		}
 		
 		clan.removeMember(kickName);
-		player.sendMessage(ChatColor.LIGHT_PURPLE + kickName + ChatColor.GREEN + " has been kicked out of your clan.");
+		plugin.getChatManager().sendMessageToClan(clan.getName(), ChatColor.LIGHT_PURPLE + kickName + 
+				ChatColor.GREEN + " has been kicked out of your clan by " + 
+				ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.GREEN +".");
 		
 		Player kickPlayer = Bukkit.getPlayer(kickName);
 		if(kickPlayer != null){
@@ -157,8 +354,6 @@ public class CommandAdmin implements CommandInterface, Observer{
 		return true;
 		
 	}
-	
-	
 
 	@Override
 	public void update(Observable commandDelegator, Object args) {

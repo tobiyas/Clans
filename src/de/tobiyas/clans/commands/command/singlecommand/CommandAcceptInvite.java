@@ -53,6 +53,9 @@ public class CommandAcceptInvite implements CommandExecutor {
 		clan.addMember(player, clan.getDefaultRank());
 		
 		invContainer.removeInvite(player);
+		
+		player.sendMessage(ChatColor.GREEN + "You joined the clan: " + ChatColor.LIGHT_PURPLE + clan.getName());
+		plugin.getChatManager().sendMessageToClan(clan.getName(), ChatColor.GREEN + "Welcome our new Member: " + ChatColor.LIGHT_PURPLE + player.getName());
 		return true;
 	}
 
