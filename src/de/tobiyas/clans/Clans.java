@@ -41,8 +41,8 @@ import de.tobiyas.clans.commands.command.singlecommand.CommandDeclineInvite;
 import de.tobiyas.clans.configuration.Config;
 import de.tobiyas.clans.datacontainer.clan.ClanController;
 import de.tobiyas.clans.listeners.Listener_Player;
-import de.tobiyas.clans.money.MoneyManager;
-import de.tobiyas.clans.permissions.PermissionManager;
+import de.tobiyas.util.economy.MoneyManager;
+import de.tobiyas.util.permissions.PermissionManager;
 
 
 public class Clans extends JavaPlugin{
@@ -67,8 +67,8 @@ public class Clans extends JavaPlugin{
 		description = getDescription();
 		prefix = "["+description.getName()+"] ";
 
-		permissionManager = new PermissionManager();
-		moneyManager = new MoneyManager();
+		permissionManager = new PermissionManager(this);
+		moneyManager = new MoneyManager(this);
 		chatManager = new ChatManager();
 		
 		setupConfiguration();
